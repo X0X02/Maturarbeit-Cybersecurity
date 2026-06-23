@@ -48,3 +48,5 @@ if __name__ == "__main__":
     block.hash = block.calculate_hash()
     print("Hash nachher:", block.hash[:30])
     print("→ anderer Hash!")
+
+#bananaunanana
