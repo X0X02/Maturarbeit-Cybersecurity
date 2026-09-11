@@ -2,7 +2,7 @@ import hashlib
 import time
 
 class Block:
-    def __init__(self, index, data, previous_hash, nonce):
+    def __init__(self, index, data, previous_hash):
         self.index = index
         self.timestamp = time.time()
         self.data = data
@@ -37,16 +37,56 @@ class Block:
 
 
 
-# Test
+
+
+class Blockchain:
+    def __init__(self):
+        self.chain = []
+
+        Genesis=Block(index=0, data="Genesis Block", previous_hash="0")
+        self.chain.append(Genesis)
+
+    def new_block(self, data):
+        index = len(self.chain)
+        previous_hash = self.chain[-1].hash
+        new_block = Block(index, data, previous_hash)
+        self.chain.append(new_block)
+
+
+    def is_chain_valid(self):
+        for i in range(1,len(self.chain)):
+            current = self.chain[i]
+            previous = self.chain[i-1]
+
+            if current.previous_hash != previous.hash:
+                return False
+
+            if current.hash != current.calculate_hash():
+                return False
+
+        return True
+
+
+
+
+# TestTESTTEST
 if __name__ == "__main__":
     block = Block(index=0, data="Alice -> Bob: 10 BTC", previous_hash="0")
     print(block)
     
-    # Zeigt, dass eine Änderung den Hash verändert
+    # Zeigt, dass Hash verändert wird.
     print("\nHash vorher:", block.hash[:30])
-    block.data = "Alice -> Bob: 100 BTC"        # Manipulation!
-    block.hash = block.calculate_hash()
+    block.data = "Alice -> Bob: 100 BTC"      
+    block.hash = block.calculate_hash(block)
     print("Hash nachher:", block.hash[:30])
     print("→ anderer Hash!")
 
-#bananaunanana
+if __name__ == "__main__":
+    bc = Blockchain()
+    bc.new_block("Alice -> Bob: 5 BTC")
+    bc.new_block("Bob -> Charlie: 2 BTC")
+
+    for block in bc.chain:
+        print(block)
+        print()
+
