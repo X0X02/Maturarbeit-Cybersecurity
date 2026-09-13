@@ -1,10 +1,23 @@
 import hashlib
 import time
+from datetime import datetime
+
+class Transaction:
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.data = f"{sender} -> {receiver} : {amount}"
+        self.timestamp=time.time()
+        self.dateandtime = datetime.fromtimestamp(self.timestamp).strftime("%H:%M:%S %d-%m-%Y")
+    def __str__(self):
+        return self.data
 
 class Block:
     def __init__(self, index, data, previous_hash):
         self.index = index
         self.timestamp = time.time()
+        self.dateandtime = datetime.fromtimestamp(self.timestamp).strftime("%H:%M:%S %d-%m-%Y")
         self.data = data
         self.previous_hash = previous_hash
         self.nonce = 0
@@ -14,7 +27,7 @@ class Block:
         # Alle Felder zu einem String zusammensetzen
         block_string = (
             str(self.index) +
-            str(self.timestamp) +
+            str(self.dateandtime) +
             str(self.data) +
             str(self.previous_hash) +
             str(self.nonce)
@@ -35,7 +48,7 @@ class Block:
         return (
             f"Block #{self.index}\n"
             f"  Daten:         {self.data}\n"
-            f"  Zeitstempel:   {self.timestamp}\n"
+            f"  Zeitstempel:   {self.dateandtime}\n"
             f"  Previous Hash: {self.previous_hash[:20]}...\n"
             f"  Hash:          {self.hash[:20]}...\n"
             f"  Nonce:         {self.nonce}"
@@ -72,8 +85,3 @@ class Blockchain:
         return True
 
 
-
-
-
-
-    

@@ -56,7 +56,10 @@ if __name__ == "__main__":
     bc2 = Blockchain()
     for i in range (14):
         bc2.new_block(f"Transaktion #{i+1}", difficulty=4)
+        print(bc2)
     print("\nAnzahl Blöcke:", len(bc2.chain))
     print("Ist die grosse Kette gültig?", bc2.is_chain_valid())
 
+
+#später mit unittest modul & mehr transaktionen usw mit "echten daten"
 
