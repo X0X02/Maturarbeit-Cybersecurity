@@ -2,6 +2,8 @@ import hashlib
 import time
 from datetime import datetime
 
+
+
 class Transaction:
     def __init__(self, sender, receiver, amount):
         self.sender = sender
@@ -13,12 +15,14 @@ class Transaction:
     def __str__(self):
         return self.data
 
+
+
 class Block:
-    def __init__(self, index, data, previous_hash):
+    def __init__(self, index, transactions, previous_hash):
         self.index = index
         self.timestamp = time.time()
         self.dateandtime = datetime.fromtimestamp(self.timestamp).strftime("%H:%M:%S %d-%m-%Y")
-        self.data = data
+        self.transactions = transactions
         self.previous_hash = previous_hash
         self.nonce = 0
         self.hash = self.calculate_hash()  
@@ -28,7 +32,7 @@ class Block:
         block_string = (
             str(self.index) +
             str(self.dateandtime) +
-            str(self.data) +
+            str(self.transactions) +
             str(self.previous_hash) +
             str(self.nonce)
         )
@@ -40,14 +44,13 @@ class Block:
             while self.hash[:difficulty] != target:
                 self.nonce += 1
                 self.hash = self.calculate_hash()
-
-
-        
+       
 
     def __str__(self):
+        txn_strings = "\n".join(str(tx) for tx in self.transactions)
         return (
             f"Block #{self.index}\n"
-            f"  Daten:         {self.data}\n"
+            f"  Daten:\n       {txn_strings}\n"
             f"  Zeitstempel:   {self.dateandtime}\n"
             f"  Previous Hash: {self.previous_hash[:20]}...\n"
             f"  Hash:          {self.hash[:20]}...\n"
@@ -60,13 +63,13 @@ class Blockchain:
     def __init__(self):
         self.chain = []
 
-        Genesis=Block(index=0, data="Genesis Block", previous_hash="0")
+        Genesis=Block(index=0, transactions=["Genesis Block"], previous_hash="0")
         self.chain.append(Genesis)
 
-    def new_block(self, data, difficulty):
+    def new_block(self, transactions, difficulty):
         index = len(self.chain)
         previous_hash = self.chain[-1].hash
-        new_block = Block(index, data, previous_hash)
+        new_block = Block(index, transactions, previous_hash)
         new_block.mine_block(difficulty)
         self.chain.append(new_block)
           

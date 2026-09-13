@@ -1,4 +1,4 @@
-from main import Block, Blockchain
+from main import Block, Blockchain, Transaction
 
 
 
@@ -40,8 +40,8 @@ if __name__ == "__main__":
     print("Vor Mining:", b.hash, "Nonce:", b.nonce)
     b.mine_block(4)
     print("Nach Mining:", b.hash, "Nonce:", b.nonce)"""
-
-
+#Tests 13.09.26
+"""
 if __name__ == "__main__":
     #Test 1 Gültigkeit und Manipulation
     bc = Blockchain()
@@ -60,6 +60,14 @@ if __name__ == "__main__":
     print("\nAnzahl Blöcke:", len(bc2.chain))
     print("Ist die grosse Kette gültig?", bc2.is_chain_valid())
 
-
 #später mit unittest modul & mehr transaktionen usw mit "echten daten"
 
+tx = Transaction("Alice", "Bob", 5)
+block = Block(index=1, transactions=tx, previous_hash="0")
+print(block)
+"""
+
+tx1 = Transaction("Alice", "Bob", 5)
+tx2 = Transaction("Bob", "Charlie", 2)
+block = Block(index=1, transactions=[tx1, tx2], previous_hash="0")
+print(block)
