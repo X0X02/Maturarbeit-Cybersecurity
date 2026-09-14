@@ -74,6 +74,16 @@ print(block)
 """
 
 
+"""
+
+balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
+
+tx1 = Transaction("Alice", "Bob", 10, balances)
+print("Nach tx1:", balances)
+
+tx2 = Transaction("Alice", "Charlie", 10, balances)  # sollte fehlschlagen!
+"""
+
 balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
 versuche = [
     ("Alice", "Bob", 10),
@@ -88,14 +98,4 @@ for sender, receiver, amount in versuche:
         print(f"❌ Abgelehnt: {sender} -> {receiver} ({amount}) — {e}")
 
 print("\nEndstand:", balances)
-
-"""
-
-balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
-
-tx1 = Transaction("Alice", "Bob", 10, balances)
-print("Nach tx1:", balances)
-
-tx2 = Transaction("Alice", "Charlie", 10, balances)  # sollte fehlschlagen!
-"""
 
