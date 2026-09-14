@@ -1,4 +1,4 @@
-from main import Block, Blockchain, Transaction
+from main import *
 
 
 
@@ -82,7 +82,7 @@ tx1 = Transaction("Alice", "Bob", 10, balances)
 print("Nach tx1:", balances)
 
 tx2 = Transaction("Alice", "Charlie", 10, balances)  # sollte fehlschlagen!
-"""
+
 
 balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
 versuche = [
@@ -97,5 +97,13 @@ for sender, receiver, amount in versuche:
     except ValueError as e:
         print(f"❌ Abgelehnt: {sender} -> {receiver} ({amount}) — {e}")
 
+
 print("\nEndstand:", balances)
 
+"""
+ledger = Ledger()
+ledger.add_account("Alice", 10)
+ledger.add_account("Bob", 0)
+print(ledger.get_balance("Alice"))   # sollte 10 zeigen
+tx = ledger.transfer("Alice", "Bob", 5)
+print(ledger.get_balance("Alice"), ledger.get_balance("Bob"))  # 5, 5

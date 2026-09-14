@@ -2,22 +2,33 @@ import hashlib
 import time
 from datetime import datetime
 
+class Ledger:
+    def __init__(self):
+        self.balances = {}
+
+    def add_account(self, name, starting_balance):
+        self.balances[name] = starting_balance
+    
+    def get_balance(self, name):
+        return self.balances[name]
+            
+    def transfer(self, sender, receiver, amount):
+        if self.balances[sender] < amount:
+            raise ValueError("Nicht genug Guthaben")
+        else:
+            self.balances[sender]-=amount
+            self.balances[receiver]+=amount
+            #wer noch nicht im dictionary is und geld bekommt-> später.
+        return Transaction(sender, receiver, amount)  # jetzt nur noch ein "Beleg"
 
 
 class Transaction:
-    def __init__(self, sender, receiver, amount, balances):
-        if balances[sender] < amount:
-            raise ValueError("Nicht genug Guthaben")
-        else:
-            balances[sender]-=amount
-            balances[receiver]+=amount
-            #wer noch nicht im dictionary is und geld bekommt-> später.
+    def __init__(self, sender, receiver, amount):
+        
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
-        self.balances = balances
-
-        
+    
         self.data = f"{sender} -> {receiver} : {amount}"
         self.timestamp=time.time()
         self.dateandtime = datetime.fromtimestamp(self.timestamp).strftime("%H:%M:%S %d-%m-%Y")
