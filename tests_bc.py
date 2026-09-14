@@ -65,9 +65,37 @@ if __name__ == "__main__":
 tx = Transaction("Alice", "Bob", 5)
 block = Block(index=1, transactions=tx, previous_hash="0")
 print(block)
-"""
+
 
 tx1 = Transaction("Alice", "Bob", 5)
 tx2 = Transaction("Bob", "Charlie", 2)
 block = Block(index=1, transactions=[tx1, tx2], previous_hash="0")
 print(block)
+"""
+
+
+balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
+versuche = [
+    ("Alice", "Bob", 10),
+    ("Alice", "Charlie", 10),
+]
+
+for sender, receiver, amount in versuche:
+    try:
+        tx = Transaction(sender, receiver, amount, balances)
+        print("✅ Erfolgreich:", tx)
+    except ValueError as e:
+        print(f"❌ Abgelehnt: {sender} -> {receiver} ({amount}) — {e}")
+
+print("\nEndstand:", balances)
+
+"""
+
+balances = {"Alice": 10, "Bob": 0, "Charlie": 0}
+
+tx1 = Transaction("Alice", "Bob", 10, balances)
+print("Nach tx1:", balances)
+
+tx2 = Transaction("Alice", "Charlie", 10, balances)  # sollte fehlschlagen!
+"""
+

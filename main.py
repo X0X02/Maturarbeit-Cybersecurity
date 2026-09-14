@@ -5,10 +5,19 @@ from datetime import datetime
 
 
 class Transaction:
-    def __init__(self, sender, receiver, amount):
+    def __init__(self, sender, receiver, amount, balances):
+        if balances[sender] < amount:
+            raise ValueError("Nicht genug Guthaben")
+        else:
+            balances[sender]-=amount
+            balances[receiver]+=amount
+            #wer noch nicht im dictionary is und geld bekommt-> später.
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
+        self.balances = balances
+
+        
         self.data = f"{sender} -> {receiver} : {amount}"
         self.timestamp=time.time()
         self.dateandtime = datetime.fromtimestamp(self.timestamp).strftime("%H:%M:%S %d-%m-%Y")
