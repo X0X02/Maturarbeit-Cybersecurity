@@ -93,9 +93,9 @@ versuche = [
 for sender, receiver, amount in versuche:
     try:
         tx = Transaction(sender, receiver, amount, balances)
-        print("✅ Erfolgreich:", tx)
+        print("Erfolgreich:", tx)
     except ValueError as e:
-        print(f"❌ Abgelehnt: {sender} -> {receiver} ({amount}) — {e}")
+        print(f"Abgelehnt: {sender} -> {receiver} ({amount}) — {e}")
 
 
 print("\nEndstand:", balances)
@@ -108,8 +108,8 @@ print(ledger.get_balance("Alice"))   # sollte 10 zeigen
 tx = ledger.transfer("Alice", "Bob", 5)
 print(ledger.get_balance("Alice"), ledger.get_balance("Bob"))  # 5, 5
 
-"""
 
+#-----------------------
 
 bc = Blockchain()
 bc.ledger.add_account("Alice", 10)
@@ -124,3 +124,18 @@ bc.new_block([
 print(bc.chain[-1])
 print("Kontostände:", bc.ledger.balances)
 print("Kette gültig?", bc.is_chain_valid())
+"""
+
+"""Unittest""" #updated to unittest for testing
+import unittest
+
+class TestLedger(unittest.TestCase):
+    def test_transfer_success(self):
+        ledger = Ledger()
+        ledger.add_account("Alpha", 10)
+        ledger.add_account("Beta", 0)
+        ledger.transfer("Alpha", "Beta", 5)
+        self.assertEqual(ledger.get_balance("Alpha"), 5)
+        self.assertEqual(ledger.get_balance("Beta"), 5)
+if __name__ == "__main__":
+    unittest.main()
