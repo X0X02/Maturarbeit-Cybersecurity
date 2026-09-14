@@ -82,14 +82,24 @@ class Block:
 class Blockchain:
     def __init__(self):
         self.chain = []
+        self.ledger = Ledger()
 
         Genesis=Block(index=0, transactions=["Genesis Block"], previous_hash="0")
         self.chain.append(Genesis)
 
-    def new_block(self, transactions, difficulty):
+    def new_block(self, transaction_data, difficulty): #transaction data not yet transactions
+        valid_transactions = []
+
+        for sender, receiver, amount in transaction_data:
+            try:
+                tx = self.ledger.transfer(sender, receiver, amount)
+                valid_transactions.append(tx)
+            except ValueError as e:
+                print(f"Fehler: {sender} -> {receiver} ({amount}) - {e}")
+
         index = len(self.chain)
         previous_hash = self.chain[-1].hash
-        new_block = Block(index, transactions, previous_hash)
+        new_block = Block(index, valid_transactions, previous_hash)
         new_block.mine_block(difficulty)
         self.chain.append(new_block)
           

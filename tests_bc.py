@@ -100,10 +100,27 @@ for sender, receiver, amount in versuche:
 
 print("\nEndstand:", balances)
 
-"""
+
 ledger = Ledger()
 ledger.add_account("Alice", 10)
 ledger.add_account("Bob", 0)
 print(ledger.get_balance("Alice"))   # sollte 10 zeigen
 tx = ledger.transfer("Alice", "Bob", 5)
 print(ledger.get_balance("Alice"), ledger.get_balance("Bob"))  # 5, 5
+
+"""
+
+
+bc = Blockchain()
+bc.ledger.add_account("Alice", 10)
+bc.ledger.add_account("Bob", 0)
+bc.ledger.add_account("Charlie", 0)
+
+bc.new_block([
+    ("Alice", "Bob", 10),
+    ("Alice", "Charlie", 10),   # sollte abgelehnt werden
+], difficulty=4)
+
+print(bc.chain[-1])
+print("Kontostände:", bc.ledger.balances)
+print("Kette gültig?", bc.is_chain_valid())
