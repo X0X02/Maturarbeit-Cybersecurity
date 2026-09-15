@@ -6,7 +6,7 @@ class Ledger:
     def __init__(self):
         self.balances = {}
 
-    def add_account(self, name, starting_balance):
+    def add_account(self, name, starting_balance): #Problem mit selbem namen!!
         self.balances[name] = starting_balance
     
     def get_balance(self, name):
@@ -15,6 +15,8 @@ class Ledger:
     def transfer(self, sender, receiver, amount):
         if self.balances[sender] < amount:
             raise ValueError("Nicht genug Guthaben")
+        if receiver not in self.balances:
+            self.balances[receiver] = 0
         else:
             self.balances[sender]-=amount
             self.balances[receiver]+=amount

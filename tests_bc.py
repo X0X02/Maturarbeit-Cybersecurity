@@ -137,5 +137,17 @@ class TestLedger(unittest.TestCase):
         ledger.transfer("Alpha", "Beta", 5)
         self.assertEqual(ledger.get_balance("Alpha"), 5)
         self.assertEqual(ledger.get_balance("Beta"), 5)
+    
+    def test_transfer_fail_nofunds(self):
+        ledger = Ledger()
+        ledger.add_account("Alice", 0)
+        ledger.add_account("Bruno", 5)
+        
+        with self.assertRaises(ValueError):
+            ledger.transfer("Alice", "Bruno", 5)
+        
 if __name__ == "__main__":
     unittest.main()
+
+
+#for testing -> using functions to test what is needed. -> now write a bunch of them to make sure
