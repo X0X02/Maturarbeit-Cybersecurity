@@ -1,6 +1,7 @@
 import hashlib
 import time
 from datetime import datetime
+import copy
 
 class Ledger:
     def __init__(self):
@@ -20,7 +21,6 @@ class Ledger:
         else:
             self.balances[sender]-=amount
             self.balances[receiver]+=amount
-            #wer noch nicht im dictionary is und geld bekommt-> später.
         return Transaction(sender, receiver, amount)  # jetzt nur noch ein "Beleg"
 
 
@@ -85,9 +85,15 @@ class Blockchain:
     def __init__(self):
         self.chain = []
         self.ledger = Ledger()
+        self.initial_balances={}
 
         Genesis=Block(index=0, transactions=["Genesis Block"], previous_hash="0")
         self.chain.append(Genesis)
+
+    def add_account(self, name, starting_balance):
+        self.ledger.add_account(name, starting_balance)
+        self.initial_balances [name] = starting_balance
+
 
     def new_block(self, transaction_data, difficulty): #transaction data not yet transactions
         valid_transactions = []
@@ -119,4 +125,39 @@ class Blockchain:
 
         return True
 
+    def fork(self):
+        return copy.deepcopy(self)
+    
+    
+    def calculate_balances(self):
+        temp_Ledger = Ledger()
+
+        for name, balance in self.initial_balances.items():
+            temp_Ledger.add_account(name, balance)
+
+        for block in self.chain:
+            if block.index == 0:  # Skip Genesis Block
+                continue
+
+            for tx in block.transactions:
+                sender = tx.sender
+                receiver = tx.receiver
+                amount = tx.amount
+                temp_Ledger.transfer(sender, receiver, amount)
+
+        return temp_Ledger
+
+    def receive_chain(self, other_chain):
+        if not other_chain.is_chain_valid():
+            print("Abgelehnt: Kette ist ungültig")
+            return False
+        if len(other_chain.chain) <= len(self.chain):
+            print("Abgelehnt: Kette ist nicht länger")
+            return False
+
+        self.chain = other_chain.chain
+        self.ledger = other_chain.calculate_balances()
+
+        print("Kette übernommen! Neue Länge: ", len(self.chain))
+        return True
 
