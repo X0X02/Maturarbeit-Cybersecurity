@@ -127,7 +127,7 @@ print("Kette gültig?", bc.is_chain_valid())
 """
 
 """Unittest""" #updated to unittest for testing
-"""
+
 import unittest
 
 class TestLedger(unittest.TestCase):
@@ -149,11 +149,11 @@ class TestLedger(unittest.TestCase):
         
 if __name__ == "__main__":
     unittest.main()
-"""
+
 
 #for testing -> using functions to test what is needed. -> now write a bunch of them to make sure
 
-"""
+
 #test recalculation
 bc = Blockchain()
 bc.add_account("Alice", 10)
@@ -165,20 +165,50 @@ recalculated = bc.calculate_balances()
 print("Live-Ledger:", bc.ledger.balances)
 print("Neu berechnet:", recalculated.balances)
 
-"""
 
-#test fork (making distinct copys of bc for an attempt at 51% attack)
-bc = Blockchain()
-bc.add_account("Alice", 10)
-bc.add_account("Bob", 0)
-bc.new_block([("Alice", "Bob", 5)], difficulty=4)
 
-fork1 = bc.fork()
-fork2 = bc.fork()
 
-# Jetzt divergieren sie:
-fork1.new_block([("Bob", "Alice", 2)], difficulty=4)
+class TestBlockchain(unittest.TestCase):
+    def test_fork(self):
 
-print("Original Länge:", len(bc.chain))
-print("Fork1 Länge:", len(fork1.chain))
-print("Fork2 Länge:", len(fork2.chain))
+        #test fork (making distinct copys of bc for an attempt at 51% attack)
+        bc = Blockchain()
+        bc.add_account("Alice", 10)
+        bc.add_account("Bob", 0)
+        bc.new_block([("Alice", "Bob", 5)], difficulty=4)
+
+        fork1 = bc.fork()
+        fork2 = bc.fork()
+
+        # Jetzt divergieren sie:
+        fork1.new_block([("Bob", "Alice", 2)], difficulty=4)
+
+        print("Original Länge:", len(bc.chain))
+        print("Fork1 Länge:", len(fork1.chain))
+        print("Fork2 Länge:", len(fork2.chain))
+
+
+    def test_51(self):
+
+        bc = Blockchain()
+        bc.add_account("Alice", 10)
+        bc.add_account("Bob", 0)
+        bc.add_account("Händler", 0)
+
+        bc.new_block([("Alice", "Bob", 5)], difficulty=4)
+
+        attacker_chain = bc.fork()
+
+        # Ehrliche Kette: Alice bezahlt den Händler
+        bc.new_block([("Alice", "Händler", 3)], difficulty=4)
+
+        # Angreifer baut heimlich 2 Blöcke, OHNE die Zahlung an den Händler
+        attacker_chain.new_block([("Bob", "Alice", 1)], difficulty=4)
+        attacker_chain.new_block([("Alice", "Bob", 1)], difficulty=4)
+
+        print("Vor Angriff:", bc.ledger.balances)
+        bc.receive_chain(attacker_chain)
+        print("Nach Angriff:", bc.ledger.balances)
+
+if __name__ == "__main__":
+    TestBlockchain.testxy
