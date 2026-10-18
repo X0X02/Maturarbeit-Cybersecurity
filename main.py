@@ -18,9 +18,9 @@ class Ledger:
             raise ValueError("Nicht genug Guthaben")
         if receiver not in self.balances:
             self.balances[receiver] = 0
-        else:
-            self.balances[sender]-=amount
-            self.balances[receiver]+=amount
+
+        self.balances[sender]-=amount
+        self.balances[receiver]+=amount
         return Transaction(sender, receiver, amount)  # jetzt nur noch ein "Beleg"
 
 
@@ -50,14 +50,14 @@ class Block:
         self.hash = self.calculate_hash()  
 
     def calculate_hash(self):
-        # Alle Felder zu einem String zusammensetzen
+    # Alle Felder zu einem String zusammensetzen
         block_string = (
-            str(self.index) +
-            str(self.dateandtime) +
-            str(self.transactions) +
-            str(self.previous_hash) +
-            str(self.nonce)
-        )
+        str(self.index) +
+        str(self.dateandtime) +
+        "".join(str(tx) for tx in self.transactions) +
+        str(self.previous_hash) +
+        str(self.nonce)
+    )
         # SHA-256 berechnen und als Hexadezimalzahl zurückgeben
         return hashlib.sha256(block_string.encode()).hexdigest()
 
