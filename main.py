@@ -89,7 +89,7 @@ class Blockchain:
 
         Genesis=Block(index=0, transactions=["Genesis Block"], previous_hash="0")
         self.chain.append(Genesis)
-
+    
     def add_account(self, name, starting_balance):
         self.ledger.add_account(name, starting_balance)
         self.initial_balances [name] = starting_balance
